@@ -4,10 +4,13 @@ using System.Collections;
 public class GridCell : MonoBehaviour {
 
 
-    private bool isAvailable = false;
-    public int row = 0;
+    private bool isAvailable = true;
+    [SerializeField]
+    int row = 0;
+    [SerializeField]
     public int column = 0;
-    public Renderer renderer;
+    [SerializeField]
+    Renderer renderer;
 
     public GridCell(int i, int j)
     {
@@ -21,14 +24,13 @@ public class GridCell : MonoBehaviour {
         set
         {
             isAvailable = value;
-            //Material mat = this.gameObject.GetComponent<Material>();
             if (isAvailable)
             {
-                renderer.material.color = new Color(.7f,.7f,.0f);
+                renderer.material.color = new Color(.0f, .0f, .0f);
             }
             else
             {
-                renderer.material.color = new Color(.25f, .25f, .5f);
+                renderer.material.color = new Color(.7f, .7f, .0f);
             }
         }
     }
