@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Grid : MonoBehaviour
 {
-
+    [SerializeField]
+    Manager manager;
     AudioSource audioSource;
     private int width = 10;
     private int height = 10;
@@ -58,7 +59,6 @@ public class Grid : MonoBehaviour
 
         if (xCoord >= 0 && zCoord >= 0 && xCoord < width && zCoord < height)
         {
-            Debug.Log(xCoord.ToString() + ", " + zCoord.ToString());
             nearestCell = cells[(int)(xCoord * (width) + zCoord)];
             if (nearestCell.Available)
             {
@@ -91,6 +91,108 @@ public class Grid : MonoBehaviour
             return null;
         }
     }
+
+
+
+
+    public void CheckForSpelledWords()
+    {
+        foreach (string s in manager.Words())
+        {
+            if (FindWord(s))
+            {
+                Debug.Log("found word:" + s);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Find the first letter then call FindRestOfWord() in each direction
+    /// </summary>
+    /// <param name="word"></param>
+    /// <returns></returns>
+    private bool FindWord(string word)
+    {
+        bool found = false;
+        for (int j = 0; j < width; j++)
+        {
+            for (int i = 0; i < height; i++)
+            {
+                if (word[0] == cells[(i * (height)) + j].GetLetter())
+                {
+                    for (int dir = 0; dir < 8; dir++)
+                    {
+                        found = FindRestOfWord(word, i, j, (Direction)dir, 1);
+                        if (found) return true;
+                    }
+                    
+                }
+            }
+        }
+        return false;
+    }
+
+
+    enum Direction { n, ne, e, se, s, sw, w, nw};
+
+    private bool FindRestOfWord(string word, int i, int j, Direction dir, int index)
+    {
+        //if we get here, the first letter of word was found at i, j 
+        //So start at i,j and look around it for the second letter.
+        switch (dir)
+        {
+            case Direction.n:
+                j += 1; if (j > height) return false;
+                break;
+            case Direction.ne:
+                j += 1; if (j > height) return false;
+                i += 1; if (i > width) return false;
+                break;
+            case Direction.e:
+                i += 1; if (i > width) return false;
+                break;
+            case Direction.se:
+                j -= 1; if (j < 0) return false;
+                i += 1; if (i > width) return false;
+                break;
+            case Direction.s:
+                j -= 1; if (j < 0) return false;
+                break;
+            case Direction.sw:
+                i -= 1; if (i < 0) return false;
+                j -= 1; if (j < 0) return false;
+                break;
+            case Direction.w:
+                i -= 1; if (i < 0) return false;
+                break;
+            case Direction.nw:
+                i -= 1; if (i < 0) return false;
+                j += 1; if (j > height) return false;
+                break;
+        }
+
+        //were on the board so look
+        {
+            if (word[index] != cells[(i * (height)) + j].GetLetter())
+            {
+                return false;
+            }
+            else
+            {
+                if (index >= word.Length - 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return FindRestOfWord(word, i, j, (Direction)dir, index + 1);
+                }
+            }
+        }
+        return false;
+    }
+
 }
 
 

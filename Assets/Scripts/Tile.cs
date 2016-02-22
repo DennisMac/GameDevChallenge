@@ -56,11 +56,9 @@ public class Tile : MonoBehaviour {
 
     public void PlaceOnBoard(Vector3 position)
     {
-        Debug.Log("Free: " + free.ToString());
         if (!free || selectedTile == this)
         {
             free = false;
-            Debug.Log("got here 2");
             gridCell = grid.FindNearestFreeCell(position);
             DropTile();
         }
@@ -73,7 +71,9 @@ public class Tile : MonoBehaviour {
             transform.position = gridCell.transform.position + new Vector3(0f, .2f, 0f);
             transform.rotation = Quaternion.Euler(90f, 0f, 0f);
             gridCell.Available = false;
+            gridCell.SetLetter(this.textMesh.text[0]);
             UnSelectThisTile();
+            grid.CheckForSpelledWords();
             WasOnBoard = true;
         }
         else

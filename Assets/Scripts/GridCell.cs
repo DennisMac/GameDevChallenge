@@ -6,16 +6,12 @@ public class GridCell : MonoBehaviour {
 
     private bool isAvailable = true;
     [SerializeField]
-    int row = 0;
-    [SerializeField]
-    public int column = 0;
-    [SerializeField]
-    Renderer renderer;
+    Renderer cellRenderer;
+    private char letter;
 
-    public GridCell(int i, int j)
+    public GridCell()
     {
-        row = 1;
-        column = j;
+        letter = '0';
     }
 
     public bool Available
@@ -26,13 +22,21 @@ public class GridCell : MonoBehaviour {
             isAvailable = value;
             if (isAvailable)
             {
-                renderer.material.color = new Color(.0f, .0f, .0f);
+                cellRenderer.material.color = new Color(.0f, .0f, .0f);
             }
             else
             {
-                renderer.material.color = new Color(.7f, .7f, .0f);
+                cellRenderer.material.color = new Color(.7f, .7f, .0f);
             }
         }
     }
 
+    public void SetLetter(char letter)
+    {
+        this.letter = letter;
+    }
+    public char GetLetter()
+    {
+        return letter;
+    }
 }

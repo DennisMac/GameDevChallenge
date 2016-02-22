@@ -75,8 +75,12 @@ public class Manager : MonoBehaviour {
             {
                 timeElapesed = 0;
                 tiles[freed++].SetFree();
-                Debug.Log("freed" + freed.ToString());
             }
         }
+    }
+
+    public string[] Words()
+    {
+        return words;
     }
 }

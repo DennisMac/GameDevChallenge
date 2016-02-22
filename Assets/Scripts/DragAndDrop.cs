@@ -22,7 +22,6 @@ public class DragAndDrop : MonoBehaviour
             targetObject = GetClickedObject(out hitInfo);
             if (targetObject != null)
             {
-                Debug.Log("hit target 2:" + targetObject.gameObject.tag.ToString());
                 switch (targetObject.gameObject.tag)
                 {
                     case "Tile":
@@ -39,7 +38,6 @@ public class DragAndDrop : MonoBehaviour
                         {
                             screenSpace = Camera.main.WorldToScreenPoint(targetCell.transform.position);
                             Tile.selectedTile.PlaceOnBoard(targetCell.transform.position);
-                            Debug.Log("Fling to board vector" + targetCell.transform.position.ToString());
                         }
                         break;
                 }
@@ -76,7 +74,6 @@ public class DragAndDrop : MonoBehaviour
         if (Physics.Raycast(ray.origin, ray.direction * 10, out hit))
         {
             target = hit.collider.gameObject;
-            Debug.Log("hit target:" + target.gameObject.tag.ToString());
             if (!(target.gameObject.tag == "Tile" || target.gameObject.tag == "GridCell"))
             {
                 target = null;
