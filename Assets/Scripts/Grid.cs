@@ -144,11 +144,11 @@ public class Grid : MonoBehaviour
                         if (found)
                             return true;
                     }
-                    
+                    tilesToHighLight.Remove(firstLetterTile);
                 }
             }
         }
-        tilesToHighLight.Remove(firstLetterTile);
+        
         return false;
     }
 
