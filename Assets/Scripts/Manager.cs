@@ -14,7 +14,8 @@ public class Manager : MonoBehaviour {
     private Tile[] tiles;
     [SerializeField]
     private Text textWordsToSpell;
-
+    [SerializeField]
+    private Text WordsSpelled;
     private float radius = 8;
 
 
@@ -82,5 +83,15 @@ public class Manager : MonoBehaviour {
     public string[] Words()
     {
         return words;
+    }
+
+    public void FillWordsSpelled(List<string> words)
+    {
+        WordsSpelled.text = "";
+        foreach (string s in words)
+        {
+            WordsSpelled.text += s + "\n";
+        }
+        words.Clear();
     }
 }

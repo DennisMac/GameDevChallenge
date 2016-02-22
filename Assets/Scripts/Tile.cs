@@ -14,6 +14,11 @@ public class Tile : MonoBehaviour {
     float speed = 3.0f;
     Grid grid;
     GridCell gridCell = null;
+    private bool bouncing = false;
+    private float TimeToBounce = 0.2f;
+    private float bounceTimeElapsed = 0f;
+    private Vector3 boardPosition;
+    private Quaternion boardRotation;
 
     public bool WasOnBoard { get; set; }
 
@@ -29,9 +34,42 @@ public class Tile : MonoBehaviour {
     {
         if (free)
         {
-            transform.position = Vector3.Lerp(transform.position, homePosition, Time.deltaTime* speed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(90f,0f,0f), Time.deltaTime * speed);
+            transform.position = Vector3.Lerp(transform.position, homePosition, Time.deltaTime * speed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(90f, 0f, 0f), Time.deltaTime * speed);
         }
+        else
+        {
+            if (bouncing)
+            {
+                bounceTimeElapsed += Time.deltaTime;
+
+                if (bounceTimeElapsed > TimeToBounce)
+                {
+                    transform.position = boardPosition;
+                    transform.rotation = boardRotation;
+                    bouncing = false;
+                }
+                else
+                {
+                    if (bounceTimeElapsed < TimeToBounce / 2f)
+                    {
+                        transform.position += Vector3.up * Time.deltaTime*4;
+                    }
+                    else
+                    {
+                        transform.position -= Vector3.up * Time.deltaTime*4;
+                    }
+                }
+            }
+        }
+    }
+
+    public void Bounce()
+    {
+        boardPosition = transform.position;
+        boardRotation = transform.rotation;
+        bounceTimeElapsed = 0f;
+        bouncing = true;
     }
 
     public void SetLetter(char letter)
@@ -71,7 +109,7 @@ public class Tile : MonoBehaviour {
             transform.position = gridCell.transform.position + new Vector3(0f, .2f, 0f);
             transform.rotation = Quaternion.Euler(90f, 0f, 0f);
             gridCell.Available = false;
-            gridCell.SetLetter(this.textMesh.text[0]);
+            gridCell.SetLetter(this.textMesh.text[0], this);
             UnSelectThisTile();
             grid.CheckForSpelledWords();
             WasOnBoard = true;
@@ -79,6 +117,7 @@ public class Tile : MonoBehaviour {
         else
         {
             SetFree();
+            grid.CheckForSpelledWords();
             this.SelectThisTile();
         }
     }
@@ -91,6 +130,7 @@ public class Tile : MonoBehaviour {
         if (gridCell != null)
         {
             gridCell.Available = true;
+            gridCell.SetLetter('0', null);
         }
         if (selectedTile != null)
         {

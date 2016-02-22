@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class Grid : MonoBehaviour
     private GridCell[] cells;
     [SerializeField]
     private float minRange = 99999999f;
+
+    List<Tile> tilesToHighLight = new List<Tile>();
 
     void Awake()
     {
@@ -94,16 +97,27 @@ public class Grid : MonoBehaviour
 
 
 
-
+    
     public void CheckForSpelledWords()
     {
+        List<string> foundWords = new List<string>();
+        tilesToHighLight.Clear();
         foreach (string s in manager.Words())
         {
             if (FindWord(s))
             {
-                Debug.Log("found word:" + s);
+                foundWords.Add(s);
+                foreach (Tile t in tilesToHighLight)
+                {
+                    t.Bounce();
+                }
+            }
+            else
+            {
+                tilesToHighLight.Clear();
             }
         }
+        manager.FillWordsSpelled(foundWords);
     }
 
 
@@ -114,6 +128,7 @@ public class Grid : MonoBehaviour
     /// <returns></returns>
     private bool FindWord(string word)
     {
+        Tile firstLetterTile = null;
         bool found = false;
         for (int j = 0; j < width; j++)
         {
@@ -121,15 +136,19 @@ public class Grid : MonoBehaviour
             {
                 if (word[0] == cells[(i * (height)) + j].GetLetter())
                 {
+                    firstLetterTile = cells[(i * (height)) + j].Tile;
+                    tilesToHighLight.Add(firstLetterTile);
                     for (int dir = 0; dir < 8; dir++)
                     {
                         found = FindRestOfWord(word, i, j, (Direction)dir, 1);
-                        if (found) return true;
+                        if (found)
+                            return true;
                     }
                     
                 }
             }
         }
+        tilesToHighLight.Remove(firstLetterTile);
         return false;
     }
 
@@ -138,6 +157,7 @@ public class Grid : MonoBehaviour
 
     private bool FindRestOfWord(string word, int i, int j, Direction dir, int index)
     {
+        
         //if we get here, the first letter of word was found at i, j 
         //So start at i,j and look around it for the second letter.
         switch (dir)
@@ -180,6 +200,7 @@ public class Grid : MonoBehaviour
             }
             else
             {
+                tilesToHighLight.Add(cells[(i * (height)) + j].Tile);
                 if (index >= word.Length - 1)
                 {
                     return true;

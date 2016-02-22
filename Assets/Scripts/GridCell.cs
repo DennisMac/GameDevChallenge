@@ -9,6 +9,8 @@ public class GridCell : MonoBehaviour {
     Renderer cellRenderer;
     private char letter;
 
+    public Tile Tile { get; set; }
+
     public GridCell()
     {
         letter = '0';
@@ -31,10 +33,12 @@ public class GridCell : MonoBehaviour {
         }
     }
 
-    public void SetLetter(char letter)
+    public void SetLetter(char letter, Tile tile)
     {
         this.letter = letter;
+        this.Tile = tile;
     }
+
     public char GetLetter()
     {
         return letter;
