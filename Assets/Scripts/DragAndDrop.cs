@@ -8,6 +8,7 @@ public class DragAndDrop : MonoBehaviour
     private GameObject targetObject;
     public Vector3 screenSpace;
     public Vector3 offset;
+    public static bool dontAllowClicking = false;
 
     void Awake()
     {
@@ -16,7 +17,7 @@ public class DragAndDrop : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) )
         {
             RaycastHit hitInfo;
             targetObject = GetClickedObject(out hitInfo);
@@ -79,6 +80,8 @@ public class DragAndDrop : MonoBehaviour
                 target = null;
             }
         }
+
+        if (dontAllowClicking) return null;
         if (target != null)
         {
             return target;

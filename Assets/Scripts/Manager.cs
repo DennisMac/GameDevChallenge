@@ -19,6 +19,7 @@ public class Manager : MonoBehaviour {
     private float radius = 8;
 
 
+
     void Start()
     {
         //Display the words to spell on the UI
@@ -93,5 +94,11 @@ public class Manager : MonoBehaviour {
             WordsSpelled.text += s + "\n";
         }
         words.Clear();
+    }
+
+
+    public void AddSpelledWord(string s)
+    {
+        WordsSpelled.text += s + "\n";
     }
 }

@@ -12,6 +12,8 @@ public class Tile : MonoBehaviour {
     bool free = false;
     [SerializeField]
     float speed = 3.0f;
+    [SerializeField]
+    Explosion explosion;
     Grid grid;
     GridCell gridCell = null;
     private bool bouncing = false;
@@ -20,6 +22,21 @@ public class Tile : MonoBehaviour {
     private Vector3 boardPosition;
     private Quaternion boardRotation;
 
+
+
+    #region properties
+
+    private static Tile lastTilePlaced;
+    public static Tile LastTilePlaced
+    {
+        get { return lastTilePlaced; }
+        set
+        {
+            lastTilePlaced = value;
+            Debug.Log("last tile placed" + lastTilePlaced.textMesh.text);
+        }
+    }
+    #endregion
     public bool WasOnBoard { get; set; }
 
     void Awake () {
@@ -70,6 +87,7 @@ public class Tile : MonoBehaviour {
         boardRotation = transform.rotation;
         bounceTimeElapsed = 0f;
         bouncing = true;
+        Instantiate(explosion, transform.position, Quaternion.identity);
     }
 
     public void SetLetter(char letter)
@@ -113,6 +131,7 @@ public class Tile : MonoBehaviour {
             UnSelectThisTile();
             grid.CheckForSpelledWords();
             WasOnBoard = true;
+             
         }
         else
         {
@@ -158,6 +177,7 @@ public class Tile : MonoBehaviour {
     {
         //change color to selected
         selectedTile = this;
+        LastTilePlaced = this;
         renderer.material.color = new Color(.7f, .7f, .0f);
     }
     public void UnSelectThisTile()

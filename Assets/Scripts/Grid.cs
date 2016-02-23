@@ -102,23 +102,44 @@ public class Grid : MonoBehaviour
     {
         List<string> foundWords = new List<string>();
         tilesToHighLight.Clear();
+        tilesToBounce.Clear();
         foreach (string s in manager.Words())
         {
             if (FindWord(s))
             {
                 foundWords.Add(s);
-                foreach (Tile t in tilesToHighLight)
+                if (tilesToHighLight.Contains(Tile.LastTilePlaced))
                 {
-                    t.Bounce();
+                    foreach (Tile t in tilesToHighLight)
+                    {
+                        tilesToBounce.Add(t);
+                    }
                 }
             }
-            else
-            {
-                tilesToHighLight.Clear();
-            }
+
+            tilesToHighLight.Clear();
+
         }
+        StartCoroutine(BounceTiles());
         manager.FillWordsSpelled(foundWords);
     }
+
+
+    List<Tile> tilesToBounce = new List<Tile>();
+    IEnumerator BounceTiles()
+    {
+        DragAndDrop.dontAllowClicking = true;
+        foreach (Tile t in tilesToBounce)
+        {
+            t.Bounce();
+            yield return new WaitForSeconds(0.1f);
+        }
+        DragAndDrop.dontAllowClicking = false;
+    }
+
+
+
+
 
 
     /// <summary>
