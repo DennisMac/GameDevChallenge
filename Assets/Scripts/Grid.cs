@@ -5,13 +5,13 @@ using System.Collections.Generic;
 public class Grid : MonoBehaviour
 {
     [SerializeField]
-    Manager manager;
+    Manager manager = null;
     AudioSource audioSource;
     private int width = 10;
     private int height = 10;
     private float cellSpacing = 1.0f;
     [SerializeField]
-    private GridCell gridCell;
+    private GridCell gridCell = null;
     private GridCell[] cells;
     [SerializeField]
     private float minRange = 99999999f;
@@ -35,7 +35,7 @@ public class Grid : MonoBehaviour
         {
             for (int i = 0; i < height; i++)
             {
-                cells[(i * (height)) + j] = Instantiate(gridCell, new Vector3(i * cellSpacing - xOffset, 0, j * cellSpacing - zOffset), Quaternion.EulerAngles(Mathf.PI / 2f, 0, 0)) as GridCell;
+                cells[(i * (height)) + j] = Instantiate(gridCell, new Vector3(i * cellSpacing - xOffset, 0, j * cellSpacing - zOffset), Quaternion.Euler(90, 0, 0)) as GridCell;
                 cells[(i * (height)) + j].Available = true;
             }
         }
@@ -50,7 +50,6 @@ public class Grid : MonoBehaviour
     /// <returns></returns>
     public GridCell FindNearestFreeCell(Vector3 pos)
     {
-        int i = 0;
         GridCell nearestCell = null;
         float minDistance = 9999999f;
 
@@ -232,7 +231,7 @@ public class Grid : MonoBehaviour
                 }
             }
         }
-        return false;
+        //return false;
     }
 
 }

@@ -6,7 +6,7 @@ public class GridCell : MonoBehaviour {
 
     private bool isAvailable = true;
     [SerializeField]
-    Renderer cellRenderer;
+    Renderer cellRenderer = null;
     private char letter;
 
     public Tile Tile { get; set; }

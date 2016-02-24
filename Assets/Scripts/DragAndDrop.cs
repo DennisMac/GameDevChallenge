@@ -17,7 +17,7 @@ public class DragAndDrop : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) )
+        if (Input.GetButtonDown("Fire1"))
         {
             RaycastHit hitInfo;
             targetObject = GetClickedObject(out hitInfo);
@@ -45,7 +45,7 @@ public class DragAndDrop : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetButtonUp("Fire1"))
         {
             _mouseState = false;
             if (targetObject != null)

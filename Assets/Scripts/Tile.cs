@@ -5,7 +5,7 @@ public class Tile : MonoBehaviour {
 
     public static Tile selectedTile = null;
     [SerializeField]
-    Renderer renderer;
+    Renderer tileRenderer = null;
     AudioSource audioSource;
     TextMesh textMesh;
     Vector3 homePosition = new Vector3(0, 15, -6);
@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour {
     [SerializeField]
     float speed = 3.0f;
     [SerializeField]
-    Explosion explosion;
+    Explosion explosion = null;
     Grid grid;
     GridCell gridCell = null;
     private bool bouncing = false;
@@ -178,13 +178,13 @@ public class Tile : MonoBehaviour {
         //change color to selected
         selectedTile = this;
         LastTilePlaced = this;
-        renderer.material.color = new Color(.7f, .7f, .0f);
+        tileRenderer.material.color = new Color(.7f, .7f, .0f);
     }
     public void UnSelectThisTile()
     {
         //change color to unselected
         selectedTile = null;
-        renderer.material.color = new Color(1f, 1f, 1f);
+        tileRenderer.material.color = new Color(1f, 1f, 1f);
     }
 
 }

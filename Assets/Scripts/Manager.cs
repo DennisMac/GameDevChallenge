@@ -6,16 +6,16 @@ using UnityEngine.UI;
 
 public class Manager : MonoBehaviour {
     [SerializeField]
-    private Tile tilePrefab;
+    private Tile tilePrefab = null;
     [SerializeField]
-    private string[] words;
+    private string[] words = null;
     private List<char> letters = new List<char>();
     [SerializeField]
     private Tile[] tiles;
     [SerializeField]
-    private Text textWordsToSpell;
+    private Text textWordsToSpell = null;
     [SerializeField]
-    private Text WordsSpelled;
+    private Text WordsSpelled = null;
     private float radius = 8;
 
 
