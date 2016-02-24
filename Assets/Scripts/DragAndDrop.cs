@@ -9,6 +9,12 @@ public class DragAndDrop : MonoBehaviour
     public Vector3 screenSpace;
     public Vector3 offset;
     public static bool dontAllowClicking = false;
+    bool touchDown = false;
+    bool touchUp = false;
+    bool dragging = false;
+    #region for iOs
+    private Vector2 touchOrigin = -Vector2.one;
+    #endregion
 
     void Awake()
     {
@@ -17,7 +23,27 @@ public class DragAndDrop : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        touchDown = false;
+        touchUp = false;
+        if (Input.touchCount > 0)
+        {
+            Touch myTouch = Input.touches[0];
+            touchOrigin = myTouch.position;
+            if (myTouch.phase == TouchPhase.Began)
+            {
+                touchDown = true;
+                dragging = true;
+            }
+            else if (myTouch.phase == TouchPhase.Ended)
+            {
+                dragging = false;
+                touchUp = true;
+            }
+        }
+
+
+
+        if (Input.GetMouseButtonDown(0) || touchDown)
         {
             RaycastHit hitInfo;
             targetObject = GetClickedObject(out hitInfo);
@@ -45,7 +71,7 @@ public class DragAndDrop : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetMouseButtonUp(0) || touchUp)
         {
             _mouseState = false;
             if (targetObject != null)
@@ -61,6 +87,9 @@ public class DragAndDrop : MonoBehaviour
 
         if (_mouseState)
         {
+            Vector3 dragPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenSpace.z);
+            if (dragging) dragPosition = new Vector3(touchOrigin.x, touchOrigin.y, screenSpace.z);
+
             var curScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenSpace.z);
             var curPosition = Camera.main.ScreenToWorldPoint(curScreenSpace) + offset;
             targetObject.transform.position = curPosition;
@@ -71,7 +100,13 @@ public class DragAndDrop : MonoBehaviour
     GameObject GetClickedObject(out RaycastHit hit)
     {
         GameObject target = null;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 inputPosition;
+        if (touchDown)
+            inputPosition = new Vector3(touchOrigin.x, touchOrigin.y, 0);
+        else
+            inputPosition = Input.mousePosition;
+
+        Ray ray = Camera.main.ScreenPointToRay(inputPosition);
         if (Physics.Raycast(ray.origin, ray.direction * 10, out hit))
         {
             target = hit.collider.gameObject;

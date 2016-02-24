@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class Tile : MonoBehaviour {
-
+    [SerializeField]
+    RisingLetter risingLetterPrefab;
     public static Tile selectedTile = null;
     [SerializeField]
     Renderer tileRenderer = null;
@@ -88,6 +89,8 @@ public class Tile : MonoBehaviour {
         bounceTimeElapsed = 0f;
         bouncing = true;
         Instantiate(explosion, transform.position, Quaternion.identity);
+        RisingLetter  risingLetter = Instantiate(risingLetterPrefab, transform.position + new Vector3(-.2f,1f,.5f), Quaternion.Euler(90, 0, 0)) as RisingLetter;
+        risingLetter.SetText(textMesh.text);
     }
 
     public void SetLetter(char letter)
